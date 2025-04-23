@@ -60,6 +60,43 @@ class Bd{
 
        return despesas
     }
+    
+    pesquisar(despesa){
+        let despesasFiltradas = Array()
+
+        despesasFiltradas = this.recuperarTodosRegistros()
+
+        console.log(despesasFiltradas)
+
+        if(despesa.ano != ""){
+            despesasFiltradas = despesasFiltradas.filter(d => d.ano == despesa.ano)
+
+        }
+
+        if(despesa.mes != ""){
+            despesasFiltradas = despesasFiltradas.filter(d => d.mes == despesa.mes)
+
+        }
+
+        if(despesa.dia != ""){
+            despesasFiltradas = despesasFiltradas.filter(d => d.dia == despesa.dia)
+
+        }
+
+        if(despesa.descricao != ""){
+            despesasFiltradas = despesasFiltradas.filter(d => d.descricao == despesa.descricao)
+
+        }
+
+        if(despesa.valor != ""){
+            despesasFiltradas = despesasFiltradas.filter(d => d.valor == despesa.valor)
+
+        }
+
+        return despesasFiltradas
+
+
+    }
 
     
 }
@@ -115,7 +152,7 @@ function carregaListaDespesa(){
     let despesas = Array()
     despesas = bd.recuperarTodosRegistros()
 
-    var listaDespesas = document.getElementById('listaDespesas')
+    let listaDespesas = document.getElementById('listaDespesas')
 
 
     despesas.forEach(function(a){
@@ -141,4 +178,45 @@ function carregaListaDespesa(){
         linha.insertCell(3).innerHTML = a.valor
      
     })
+}
+
+function pesquisarDespesa(){
+    let ano = document.getElementById('ano').value
+    let mes = document.getElementById('mes').value
+    let dia = document.getElementById('dia').value
+    let tipo = document.getElementById('tipo').value
+    let descricao = document.getElementById('descricao').value
+    let valor = document.getElementById('valor').value
+
+    let despesa = new Despesa(ano, mes, dia, tipo, descricao, valor)
+
+    let despesas = bd.pesquisar(despesa)
+
+    let listaDespesas = document.getElementById('listaDespesas')
+    listaDespesas.innerHTML = ''
+
+    despesas.forEach(function(a){
+        let linha = listaDespesas.insertRow()
+        console.log(linha)
+        linha.insertCell(0).innerHTML = a.dia + '/' + a.mes + '/' + a.ano
+
+        switch(a.tipo){
+            case '1': a.tipo = 'Alimentação'
+                break
+            case '2': a.tipo = 'Educação'
+                break
+            case '3': a.tipo = 'Lazer'
+                break
+            case '4': a.tipo = 'Saúde'
+                break
+            case '5': a.tipo = 'Transporte'
+                break    
+        }
+        
+        linha.insertCell(1).innerHTML = a.tipo
+        linha.insertCell(2).innerHTML = a.descricao
+        linha.insertCell(3).innerHTML = a.valor
+     
+    })
+
 }
