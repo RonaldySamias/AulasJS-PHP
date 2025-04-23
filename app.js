@@ -40,6 +40,27 @@ class Bd{
    
       localStorage.setItem('id', id)
     }
+
+    recuperarTodosRegistros(){
+    
+       let despesas = Array()
+
+
+       let id = localStorage.getItem('id')
+
+       for (let i = 1; i <= id; i++){
+            let despesa = JSON.parse(localStorage.getItem(i))
+
+            if (despesa === null){
+                cotinue
+            }
+
+            despesas.push(despesa)
+       }
+
+       return despesas
+    }
+
     
 }
 
@@ -65,6 +86,16 @@ function cadastrarDespesa(){
 
     if(despesa.validarDados()){
         bd.gravar(despesa)
+
+        //Limpar campos//
+        document.getElementById('ano').value = '';
+        document.getElementById('mes').value = '';
+        document.getElementById('dia').value = '';
+        document.getElementById('tipo').value = '';
+        document.getElementById('descricao').value = '';
+        document.getElementById('valor').value = '';
+
+
         document.getElementById('sucessError').innerHTML = 'Registro inserido com sucesso'
         document.querySelector('.modal-body').innerHTML = 'Despesa foi cadastrada com sucesso'
         $('#modalGravacao').modal('show')
@@ -80,3 +111,34 @@ function cadastrarDespesa(){
         $('#modalGravacao').modal('show')    }
 }
 
+function carregaListaDespesa(){
+    let despesas = Array()
+    despesas = bd.recuperarTodosRegistros()
+
+    var listaDespesas = document.getElementById('listaDespesas')
+
+
+    despesas.forEach(function(a){
+        let linha = listaDespesas.insertRow()
+        console.log(linha)
+        linha.insertCell(0).innerHTML = a.dia + '/' + a.mes + '/' + a.ano
+
+        switch(a.tipo){
+            case '1': a.tipo = 'Alimentação'
+                break
+            case '2': a.tipo = 'Educação'
+                break
+            case '3': a.tipo = 'Lazer'
+                break
+            case '4': a.tipo = 'Saúde'
+                break
+            case '5': a.tipo = 'Transporte'
+                break    
+        }
+        
+        linha.insertCell(1).innerHTML = a.tipo
+        linha.insertCell(2).innerHTML = a.descricao
+        linha.insertCell(3).innerHTML = a.valor
+     
+    })
+}
